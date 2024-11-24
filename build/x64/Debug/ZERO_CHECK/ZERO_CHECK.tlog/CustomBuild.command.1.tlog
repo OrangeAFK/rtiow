@@ -1,0 +1,10 @@
+^C:\USERS\ONEPL\ONEDRIVE\DESKTOP\CPP\RTIOW\BUILD\CMAKEFILES\FF492C37C64DCFCE3D0ADBA9841CC152\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/onepl/OneDrive/Desktop/cpp/rtiow -BC:/Users/onepl/OneDrive/Desktop/cpp/rtiow/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/onepl/OneDrive/Desktop/cpp/rtiow/build/rtiow.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
