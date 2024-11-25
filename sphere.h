@@ -1,7 +1,6 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "vec3.h"
 #include "hittable.h"
 
 class sphere : public hittable
@@ -11,7 +10,7 @@ private:
     double radius;
 public:
     sphere(const vec3& center, double radius) : center(center), radius(std::fmax(0,radius)) {}
-    bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
     {
         // sphere equation is (C_x - x^2) + (C_y - y^2) + (C_z - z^2) = r^2
         // -> (C-P)*(C-P) = (C-(Q+td))*(C-(Q+td)) = r^2 --> expand P to Q+td since equation is true when the ray satisfies that condition at some t
@@ -29,10 +28,10 @@ public:
         // find the nearest root that lies within the acceptable range
         auto sqrtd = std::sqrt(discriminant);
         auto root = (h - sqrtd) / a;
-        if(root <= ray_tmin || root >= ray_tmax)
+        if(!ray_t.surrounds(root))
         {
             root = (h + sqrtd)/a;
-            if(root <= ray_tmin || root >= ray_tmax) { return false; }
+            if(!ray_t.surrounds(root)) { return false; }
         }
 
         rec.t = root;
