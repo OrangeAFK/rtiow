@@ -9,6 +9,7 @@ public:
     double aspect_ratio = 1.0; // image width/height
     int image_width = 100; // image width in pixel count
     int samples_per_pixel = 10; // random samples per pixel
+    int max_depth = 10; // max recursion for bounces
     void render(const hittable& world)
     {
         initialize();
@@ -21,7 +22,7 @@ public:
                 for(int sample = 0; sample < samples_per_pixel; sample++)
                 {
                     ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, world);
+                    pixel_color += ray_color(r, max_depth, world);
                 }
                 write_color(std::cout, pixel_samples_scale * pixel_color);
             }
@@ -75,14 +76,15 @@ private:
 
     }
 
-    vec3 ray_color(const ray& r, const hittable& world) const
+    vec3 ray_color(const ray& r, int depth, const hittable& world) const
     {
+        if(depth<=0) { return vec3(0,0,0); }
         hit_record rec;
         // world objects colored by normals
-        if(world.hit(r, interval(0, infinity), rec))
+        if(world.hit(r, interval(0.001, infinity), rec))
         {
             vec3 direction = random_on_hemisphere(rec.normal);
-            return 0.5 * ray_color(ray(rec.p, direction), world);
+            return 0.5 * ray_color(ray(rec.p, direction), depth-1, world);
         }
 
         // background, white/blue gradient
