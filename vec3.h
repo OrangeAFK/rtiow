@@ -44,6 +44,12 @@ public:
     {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
     }
+    bool near_zero() const
+    {
+        // return true if the vector is near zero in all directions
+        auto epsilon = 1e-8;
+        return (std::fabs(e[0])<epsilon) && (std::fabs(e[1])<epsilon) && (std::fabs(e[2])<epsilon);
+    }
 
     static vec3 random()
     {
@@ -104,11 +110,17 @@ inline vec3 random_unit_vector()
         }
     }
 }
-inline vec3 random_on_hemisphere(const vec3& normal) {
+inline vec3 random_on_hemisphere(const vec3& normal) 
+{
     vec3 on_unit_sphere = random_unit_vector();
     if (dot(on_unit_sphere, normal) > 0.0) // In the same hemisphere as the normal
         return on_unit_sphere;
     else
         return -on_unit_sphere;
+}
+inline vec3 reflect(const vec3& v, const vec3& n)
+{
+    // reflected = v+2b, where b the normal vector scaled to the parallel component of v
+    return v - 2 * dot(v,n)*n;
 }
 #endif
